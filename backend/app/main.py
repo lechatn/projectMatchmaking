@@ -41,8 +41,11 @@ async def websocket_endpoint(websocket: WebSocket):
                 await manager.join_queue(websocket, pseudo)
             elif data == "leave_queue":
                 await manager.leave_queue(websocket)
-            elif data == "start_game":
-                await manager.send_message(f"Un match commence !")        
+            elif data.startswith("start_game"):
+                move_data = data.split(":")
+                player1id = move_data[1]
+                player2id = move_data[2]
+                await manager.start_game(player1id, player2id)
             elif data.startswith("play_move"):
                 move_data = data.split(":")
                 move = move_data[1]

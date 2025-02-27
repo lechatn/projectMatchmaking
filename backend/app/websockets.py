@@ -64,5 +64,29 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(move)
 
+    async def start_game(self, player1id: int, player2id: int):
+        print(f"Game started between {player1id} and {player2id}")
+
+        if not database.is_connected:
+            await database.connect()
+
+        player1id = int(player1id)
+        player2id = int(player2id)
+
+        query = "INSERT INTO game (player1id, player2id, board) VALUES (:player1id, :player2id, :board)"
+        values = {
+            "player1id": player1id,
+            "player2id": player2id,
+            "board": "---------"
+        }
+
+        try:
+            await database.execute(query=query, values=values)
+        except Exception as e:
+            print(e)
+
+        await self.send_message(f"Game started between {player1id} and {player2id}")
+
+
 
 manager = ConnectionManager()
