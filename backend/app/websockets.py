@@ -14,17 +14,18 @@ class ConnectionManager:
     async def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
-    async def join_queue(self, websocket: WebSocket):
+    async def join_queue(self, websocket: WebSocket, pseudo: str):
         if websocket not in self.queue:
             self.queue.append(websocket)
 
-            await database.connect()
+            if not database.is_connected:
+                await database.connect()
 
             query = "INSERT INTO queue (playerip, port, pseudo) VALUES (:playerip, :port, :pseudo)"
             values = {
                 "playerip": websocket.client.host,
                 "port": websocket.client.port,
-                "pseudo": "pseudo"
+                "pseudo": pseudo
             }
 
             try:
@@ -37,6 +38,22 @@ class ConnectionManager:
     async def leave_queue(self, websocket: WebSocket):
         if websocket in self.queue:
             self.queue.remove(websocket)
+
+            if not database.is_connected:
+                await database.connect()
+
+            query = "DELETE FROM queue WHERE playerip = :playerip AND port = :port"
+            values = {
+                "playerip": websocket.client.host,
+                "port": websocket.client.port
+            }
+
+            try:
+                await database.execute(query=query, values=values)
+                print("Player removed from queue.")
+            except Exception as e:
+                print(e)
+
             await websocket.send_text("Vous avez quitté la file d'attente.")
 
     async def send_message(self, message: str):

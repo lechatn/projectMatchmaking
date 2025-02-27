@@ -35,8 +35,10 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
-            if data == "join_queue":
-                await manager.join_queue(websocket)
+            if data.startswith("join_queue"):
+                move_data = data.split(":")
+                pseudo = move_data[1]
+                await manager.join_queue(websocket, pseudo)
             elif data == "leave_queue":
                 await manager.leave_queue(websocket)
             elif data == "start_game":
