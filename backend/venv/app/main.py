@@ -35,6 +35,20 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_message(f"Message reçu: {data}")
+            if data == "join_queue":
+                await manager.join_queue(websocket)
+            elif data == "leave_queue":
+                await manager.leave_queue(websocket)
+            elif data == "start_game":
+                await manager.send_message(f"Un match commence !")        
+            elif data.startswith("play_move"):
+                move_data = data.split(":")
+                move = move_data[1]
+                await manager.send_message(f"Le coup joué est : {move}")                
+            elif data == "end_game":
+                await manager.send_message(f"Le match est terminé.")                
+            else:
+                await manager.send_message(f"Message reçu: {data}")
+            
     except WebSocketDisconnect:
         manager.disconnect(websocket)
