@@ -37,3 +37,5 @@ Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au to
 - Node.js (si React est utilisé)  
 
 ---
+
+uvicorn main:app --reload
