@@ -60,32 +60,90 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
-    async def play_move(self, move: str):
-        for connection in self.active_connections:
-            await connection.send_text(move)
+    async def play_move(self, websocket: WebSocket, move: str, playerid: str):
+        print("ok")
+        if websocket in self.queue:
+            print("ok 2")
+            playerid = int(playerid)
+            if not database.is_connected:
+                await database.connect()
+
+            query = "SELECT * FROM game WHERE player1id = :playerid OR player2id = :playerid"
+            values = {
+                "playerid": playerid
+            }
+
+            try:
+                game = await database.execute(query=query, values=values)
+            except Exception as e:
+                print(e)
+
+            query ="SELECT id FROM game WHERE player1id = :playerid OR player2id = :playerid"
+            values = {
+                "playerid": playerid
+            }
+
+            try:
+                game = await database
+            except Exception as e:
+                print(e)
+
+            query3 = "INSERT INTO round (game_id, move, player_turn) VALUES (:game_id, :move, :player_turn)"
+            values3 = {
+                "game_id": game,
+                "move": move,
+                "player_turn": playerid
+            }
+
+            try:
+                await database.execute(query=query3, values=values3)
+            except Exception as e:
+                print(e)
+
+            await self.send_message(f"Player {playerid} played move {move}")
+            
+
+
 
     async def start_game(self, player1id: int, player2id: int):
-        print(f"Game started between {player1id} and {player2id}")
-
         if not database.is_connected:
             await database.connect()
 
         player1id = int(player1id)
         player2id = int(player2id)
 
-        query = "INSERT INTO game (player1id, player2id, board) VALUES (:player1id, :player2id, :board)"
+        query = "SELECT FROM game WHERE player1id = :player1id AND player2id = :player2id"
         values = {
             "player1id": player1id,
-            "player2id": player2id,
-            "board": "---------"
+            "player2id": player2id
         }
 
         try:
-            await database.execute(query=query, values=values)
+            game = await database.fetch_one(query=query, values=values)
         except Exception as e:
             print(e)
 
-        await self.send_message(f"Game started between {player1id} and {player2id}")
+        if game:
+            if player1id == game.player1id or player1id == game.player2id:
+                await self.send_message(f"Player {player1id} is already in a game.")
+                return
+            elif player2id == game.player1id or player2id == game.player2id:
+                await self.send_message(f"Player {player2id} is already in a game.")
+                return
+        else:
+            query2 = "INSERT INTO game (player1id, player2id, board) VALUES (:player1id, :player2id, :board)"
+            values2 = {
+                "player1id": player1id,
+                "player2id": player2id,
+                "board": "---------"
+            }
+
+            try:
+                await database.execute(query=query2, values=values2)
+            except Exception as e:
+                print(e)
+
+            await self.send_message(f"Game started between {player1id} and {player2id}")
 
 
 

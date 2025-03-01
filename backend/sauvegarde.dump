@@ -1,0 +1,284 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.2
+-- Dumped by pg_dump version 17.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: game_result; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.game_result AS ENUM (
+    'draw',
+    'player1_win',
+    'player2_win'
+);
+
+
+ALTER TYPE public.game_result OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: game; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.game (
+    id integer NOT NULL,
+    player1id integer NOT NULL,
+    player2id integer NOT NULL,
+    board text NOT NULL,
+    is_finished boolean DEFAULT false,
+    result public.game_result DEFAULT 'draw'::public.game_result
+);
+
+
+ALTER TABLE public.game OWNER TO postgres;
+
+--
+-- Name: game_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.game_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.game_id_seq OWNER TO postgres;
+
+--
+-- Name: game_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.game_id_seq OWNED BY public.game.id;
+
+
+--
+-- Name: queue; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.queue (
+    id integer NOT NULL,
+    playerip character varying(50) NOT NULL,
+    port integer NOT NULL,
+    pseudo character varying(50) NOT NULL,
+    entrance_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.queue OWNER TO postgres;
+
+--
+-- Name: queue_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.queue_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.queue_id_seq OWNER TO postgres;
+
+--
+-- Name: queue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.queue_id_seq OWNED BY public.queue.id;
+
+
+--
+-- Name: round; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.round (
+    id integer NOT NULL,
+    game_id integer NOT NULL,
+    move character varying(50) NOT NULL,
+    player_turn integer NOT NULL
+);
+
+
+ALTER TABLE public.round OWNER TO postgres;
+
+--
+-- Name: round_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.round_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.round_id_seq OWNER TO postgres;
+
+--
+-- Name: round_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.round_id_seq OWNED BY public.round.id;
+
+
+--
+-- Name: game id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.game ALTER COLUMN id SET DEFAULT nextval('public.game_id_seq'::regclass);
+
+
+--
+-- Name: queue id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.queue ALTER COLUMN id SET DEFAULT nextval('public.queue_id_seq'::regclass);
+
+
+--
+-- Name: round id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.round ALTER COLUMN id SET DEFAULT nextval('public.round_id_seq'::regclass);
+
+
+--
+-- Data for Name: game; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.game (id, player1id, player2id, board, is_finished, result) FROM stdin;
+13	12	16	---------	f	draw
+\.
+
+
+--
+-- Data for Name: queue; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.queue (id, playerip, port, pseudo, entrance_date) FROM stdin;
+12	192.168.1.1	8080	Player1	2025-03-01 11:13:58.034605
+16	127.0.0.1	52083	antttt	2025-03-01 11:22:16.957734
+\.
+
+
+--
+-- Data for Name: round; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.round (id, game_id, move, player_turn) FROM stdin;
+\.
+
+
+--
+-- Name: game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.game_id_seq', 13, true);
+
+
+--
+-- Name: queue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.queue_id_seq', 16, true);
+
+
+--
+-- Name: round_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.round_id_seq', 1, false);
+
+
+--
+-- Name: game game_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.game
+    ADD CONSTRAINT game_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: queue queue_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.queue
+    ADD CONSTRAINT queue_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: queue queue_playerip_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.queue
+    ADD CONSTRAINT queue_playerip_key UNIQUE (playerip);
+
+
+--
+-- Name: round round_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.round
+    ADD CONSTRAINT round_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: game game_player1id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.game
+    ADD CONSTRAINT game_player1id_fkey FOREIGN KEY (player1id) REFERENCES public.queue(id) ON DELETE CASCADE;
+
+
+--
+-- Name: game game_player2id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.game
+    ADD CONSTRAINT game_player2id_fkey FOREIGN KEY (player2id) REFERENCES public.queue(id) ON DELETE CASCADE;
+
+
+--
+-- Name: round round_game_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.round
+    ADD CONSTRAINT round_game_id_fkey FOREIGN KEY (game_id) REFERENCES public.game(id) ON DELETE CASCADE;
+
+
+--
+-- Name: round round_player_turn_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.round
+    ADD CONSTRAINT round_player_turn_fkey FOREIGN KEY (player_turn) REFERENCES public.queue(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

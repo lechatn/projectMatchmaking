@@ -49,7 +49,9 @@ async def websocket_endpoint(websocket: WebSocket):
             elif data.startswith("play_move"):
                 move_data = data.split(":")
                 move = move_data[1]
-                await manager.send_message(f"Le coup joué est : {move}")                
+                playerid = move_data[2]
+                print("ok ...")
+                await manager.play_move(websocket, move, playerid)             
             elif data == "end_game":
                 await manager.send_message(f"Le match est terminé.")                
             else:
