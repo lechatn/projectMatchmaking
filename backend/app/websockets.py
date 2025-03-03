@@ -5,7 +5,7 @@ from .database import database
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
-        self.queue: List[WebSocket] = []  # Liste pour la gestion de la queue
+        self.queue: List[WebSocket] = [] 
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -61,9 +61,7 @@ class ConnectionManager:
             await connection.send_text(message)
 
     async def play_move(self, websocket: WebSocket, move: str, playerid: str):
-        print("ok")
         if websocket in self.queue:
-            print("ok 2")
             playerid = int(playerid)
             if not database.is_connected:
                 await database.connect()

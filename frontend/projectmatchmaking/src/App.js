@@ -1,24 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
+
+const socket = new WebSocket('ws://127.0.0.1:8000/ws');
+socket.addEventListener('open', function (event) {
+    socket.send('Connection Established');
+});
+
+socket.addEventListener('message', function (event) {
+    console.log(event.data);
+});
+const contactServer = () => {
+    socket.send("Initialize");
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <button onClick={contactServer}>Contact Server</button>
   );
 }
 
