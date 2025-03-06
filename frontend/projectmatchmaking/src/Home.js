@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Home.css";
+
+
 
 const socket = new WebSocket("ws://127.0.0.1:8000/ws");
 

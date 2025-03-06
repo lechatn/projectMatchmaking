@@ -1,33 +1,34 @@
+/* Style global */
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e1e2f, #282c34);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Logo avec animation améliorée */
+.App-logo {
+  height: 35vmin;
+  pointer-events: none;
+  filter: drop-shadow(0px 0px 10px rgba(97, 218, 251, 0.8));
+  transition: transform 0.3s ease-in-out;
 }
 
+.App-logo:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 10s linear;
+  }
+}
+
+/* Animation de rotation plus douce */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +36,34 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Header stylisé */
+.App-header {
+  background: rgba(40, 44, 52, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  min-width: 80%;
+  text-align: center;
+}
+
+.App-header h1 {
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Lien stylisé */
+.App-link {
+  color: #61dafb;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease-in-out, transform 0.2s;
+}
+
+.App-link:hover {
+  color: #ffffff;
+  transform: scale(1.1);
 }
