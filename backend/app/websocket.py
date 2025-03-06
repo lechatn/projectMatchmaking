@@ -159,59 +159,6 @@ class ConnectionManager:
                 print(e)
 
             await self.send_message(f"Player {playerid} played move {move}")
-            
-
-
-
-    async def start_game(self, player1id: int, player2id: int):
-        if not database.is_connected:
-            await database.connect()
-
-        player1id = int(player1id)
-        player2id = int(player2id)
-
-        query = "SELECT FROM game WHERE player1id = :player1id AND player2id = :player2id"
-        values = {
-            "player1id": player1id,
-            "player2id": player2id
-        }
-
-        try:
-            game = await database.fetch_one(query=query, values=values)
-        except Exception as e:
-            print(e)
-
-        if game:
-            if player1id == game.player1id or player1id == game.player2id:
-                await self.send_message(f"Player {player1id} is already in a game.")
-                return
-            elif player2id == game.player1id or player2id == game.player2id:
-                await self.send_message(f"Player {player2id} is already in a game.")
-                return
-        else:
-            query2 = "INSERT INTO game (player1id, player2id, board) VALUES (:player1id, :player2id, :board)"
-            values2 = {
-                "player1id": player1id,
-                "player2id": player2id,
-                "board": "---------"
-            }
-
-            try:
-                await database.execute(query=query2, values=values2)
-                player1pseudo, player2pseudo = await self.get_pseudo(player1id, player2id)
-                player1ip , player2ip = await self.get_ip(player1id, player2id)
-                player1port, player2port = await self.get_port(player1id, player2id)
-                print(player1pseudo, player2pseudo)
-                print(player1ip, player2ip)
-                print(player1port, player2port)
-                for player in self.queue:
-                    if player.client.host == player1ip and player.client.port == player1port:
-                        await player.send_text(f"game_started:{player2pseudo}")
-                    elif player.client.host == player2ip and player.client.port == player2port:
-                        await player.send_text(f"game_started:{player1pseudo}")
-            except Exception as e:
-                print(e)
-
 
     async def checkGame(self):
         if not database.is_connected:
