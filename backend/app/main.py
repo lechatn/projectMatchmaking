@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from .database import database
 from fastapi import WebSocket, WebSocketDisconnect
 from typing import List
-from app.websockets import manager
+from .websocket import manager
 
 
 # Création d'un gestionnaire de contexte async

@@ -30,11 +30,12 @@ class ConnectionManager:
 
             try:
                 await database.execute(query=query, values=values)
+                await websocket.send_text("connection_established")
             except Exception as e:
+                await websocket.send_text("connection_failed")
                 print(e)
-
-            await websocket.send_text("Vous avez rejoint la file d'attente.")
-
+                return
+    
     async def leave_queue(self, websocket: WebSocket):
         if websocket in self.queue:
             self.queue.remove(websocket)

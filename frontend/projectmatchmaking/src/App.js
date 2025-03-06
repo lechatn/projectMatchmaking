@@ -1,20 +1,16 @@
-import './App.css';
-
-const socket = new WebSocket('ws://127.0.0.1:8000/ws');
-socket.addEventListener('open', function (event) {
-    socket.send('Connection Established');
-});
-
-socket.addEventListener('message', function (event) {
-    console.log(event.data);
-});
-const contactServer = () => {
-    socket.send("Initialize");
-}
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import Game from "./Game";
 
 function App() {
   return (
-    <button onClick={contactServer}>Contact Server</button>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/game" element={<Game />} />
+      </Routes>
+    </Router>
   );
 }
 
