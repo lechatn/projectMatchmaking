@@ -57,4 +57,4 @@ async def websocket_endpoint(websocket: WebSocket):
                 await manager.send_message(f"Message reçu: {data}")
             
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        await manager.disconnect(websocket)

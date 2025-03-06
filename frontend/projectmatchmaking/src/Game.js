@@ -1,12 +1,14 @@
-import React from "react";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Game = () => {
+  const location = useLocation();
+  const playAgainst = location.state?.playAgainst;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>🕹️ Match trouvé !</h1>
-        <p>Attente du démarrage du jeu...</p>
-      </header>
+    <div className="Game">
+      <h1>Welcome to the Game!</h1>
+      <p>You're playing against: {playAgainst}</p>
     </div>
   );
 };

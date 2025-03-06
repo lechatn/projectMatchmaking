@@ -1,52 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// filepath: c:\Users\lecha\OneDrive - Ynov\Bureau\Ynov\B2\projectMatchmaking\frontend\projectmatchmaking\src\Home.js
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './App.css';
+import { useWebSocket } from './WebSocket';
 
-const socket = new WebSocket("ws://127.0.0.1:8000/ws");
-
-const Home = () => {
-  const [username, setUsername] = useState("");
+function Home() {
   const navigate = useNavigate();
+  const socket = useWebSocket();
 
   useEffect(() => {
-    socket.addEventListener("open", () => {
-      console.log("✅ Connexion WebSocket établie");
-    });
+    if (!socket) return;
 
-    socket.addEventListener("message", (event) => {
-      console.log("📩 Message reçu :", event.data);
-      if (event.data === "match_found") {
-        navigate("/game"); // 🔀 Redirige vers la page du jeu
-      } else if (event.data === "connection_failed") {
-        alert("❌ Aucun match trouvé, réessayez plus tard.");
+    const handleOpen = () => {
+      console.log('🟢 Connection established');
+    };
+
+    const handleMessage = (event) => {
+      const data = event.data;
+      const splitData = data.split(':');
+      const message = splitData[0];
+      console.log(data);
+      if (message === 'connection_established') {
+        navigate('/loading');
+      } else if (data === 'connection_failed') {
+        alert('Cannot find a game. Please try again later.');
+      } else {
+        alert('Unknown message received');
       }
-    });
+    };
 
-    return () => socket.close();
-  }, []);
+    socket.addEventListener('open', handleOpen);
+    socket.addEventListener('message', handleMessage);
+
+    return () => {
+      socket.removeEventListener('open', handleOpen);
+      socket.removeEventListener('message', handleMessage);
+    };
+  }, [socket, navigate]);
 
   const joinQueue = () => {
-    if (username.trim() === "") {
-      alert("Entrez un pseudo !");
-      return;
-    }
-    socket.send("join_queue:" + username);
-    console.log("📤 Envoyé :", "join_queue:" + username);
+    const username = document.getElementById('username').value;
+    socket.send('join_queue:' + username);
+    console.log('📤 Sent:', 'join_queue:' + username);
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🎮 Project Matchmaking</h1>
-        <input
-          type="text"
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <h1>Project Matchmaking</h1>
+        <input type="text" placeholder="Enter your username" id="username" />
         <button onClick={joinQueue}>Search for a game</button>
       </header>
     </div>
   );
-};
+}
 
 export default Home;

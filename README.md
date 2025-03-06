@@ -37,7 +37,7 @@ Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au to
 - Node.js (si React est utilisé)  
 
 ---
-
+source venv/Scripts/activate
 uvicorn app.main:app --reload dans backend
 
 wscat -c ws://127.0.0.1:8000/ws
