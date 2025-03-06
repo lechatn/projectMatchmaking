@@ -38,11 +38,17 @@ const Loading = () => {
     };
   }, [socket, navigate]);
 
+  const LeaveGame = () => {
+    socket.send('leave_queue');
+    navigate('/');
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>🕹️ En recherche de match...</h1>
         <p>Attente du démarrage du jeu...</p>
+        <button onClick={ LeaveGame }>Quitter la recherche</button>
       </header>
     </div>
   );

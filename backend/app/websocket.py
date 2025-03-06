@@ -113,9 +113,7 @@ class ConnectionManager:
                 print("Player removed from queue.")
             except Exception as e:
                 print(e)
-
-            await websocket.send_text("Vous avez quitté la file d'attente.")
-
+                
     async def send_message(self, message: str):
         for connection in self.active_connections:
             await connection.send_text(message)
