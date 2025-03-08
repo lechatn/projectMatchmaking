@@ -2,10 +2,13 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWebSocket } from './WebSocket';
+import { dotSpinner } from 'ldrs';
 
 const Loading = () => {
   const navigate = useNavigate();
   const socket = useWebSocket();
+
+  dotSpinner.register()
 
   useEffect(() => {
     if (!socket) return;
@@ -47,7 +50,11 @@ const Loading = () => {
     <div className="App">
       <header className="App-header">
         <h1>🕹️ En recherche de match...</h1>
-        <p>Attente du démarrage du jeu...</p>
+        <l-dot-spinner
+          size="40"
+          speed="0.9"
+          color="white" 
+        ></l-dot-spinner>
         <button onClick={ LeaveGame }>Quitter la recherche</button>
       </header>
     </div>
