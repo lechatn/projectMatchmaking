@@ -50,11 +50,6 @@ const Loading = () => {
     <div className="App">
       <header className="App-header">
         <h1>🕹️ En recherche de match...</h1>
-        <l-dot-spinner
-          size="40"
-          speed="0.9"
-          color="white" 
-        ></l-dot-spinner>
         <button onClick={ LeaveGame }>Quitter la recherche</button>
       </header>
     </div>

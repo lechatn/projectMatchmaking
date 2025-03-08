@@ -1,6 +1,6 @@
-// filepath: c:\Users\lecha\OneDrive - Ynov\Bureau\Ynov\B2\projectMatchmaking\frontend\projectmatchmaking\src\Home.js
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
 import './App.css';
 import { useWebSocket } from './WebSocket';
 
