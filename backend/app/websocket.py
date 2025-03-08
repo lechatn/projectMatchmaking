@@ -165,9 +165,7 @@ class ConnectionManager:
         query = """
         SELECT queue.id
         FROM queue
-        LEFT JOIN game
-        ON queue.id = game.player1id OR queue.id = game.player2id
-        WHERE game.player1id IS NULL AND game.player2id IS NULL;
+        WHERE isingame = FALSE
         """
 
         try:
@@ -175,9 +173,7 @@ class ConnectionManager:
         except Exception as e:
             print(e)
         
-        print(players)
-        print(len(players))
-        if len(players) == 2:
+        while len(players) >= 2:
             query = "INSERT INTO game (player1id, player2id, board) VALUES (:player1id, :player2id, :board)"
             values = {
                 "player1id": players[0]["id"],
@@ -198,10 +194,17 @@ class ConnectionManager:
                         await player.send_text(f"game_started:{player2pseudo}")
                     elif player.client.host == player2ip and player.client.port == player2port:
                         await player.send_text(f"game_started:{player1pseudo}")
+
+                update_query = "UPDATE queue SET isingame = TRUE WHERE id = :playerid"
+                await database.execute(query=update_query, values={"playerid": player1id})
+                await database.execute(query=update_query, values={"playerid": player2id})
+
+                players = players[2:]
             except Exception as e:
                 print(e)
         else:
             print("Pas assez de joueurs.")
+
 
 
 
