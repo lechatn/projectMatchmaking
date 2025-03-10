@@ -22,9 +22,11 @@ const Loading = () => {
       const splitData = data.split(":");
       const message = splitData[0];
       const playAgainst = splitData[1];
+      const hostId = splitData[2];
+      const opponentId = splitData[3];
       console.log(data);
       if (message === "game_started") {
-        navigate("/game", { state: { playAgainst: playAgainst } });
+        navigate("/game", { state: { playAgainst, hostId, opponentId } });
       } else if (data === "connection_failed") {
         alert("Cannot find a game. Please try again later.");
       } else {
