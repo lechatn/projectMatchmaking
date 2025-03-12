@@ -1,0 +1,55 @@
+.result-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* Styles spécifiques */
+  .win {
+    background: linear-gradient(to right, #4CAF50, #8BC34A);
+    color: white;
+  }
+  
+  .lose {
+    background: linear-gradient(to right, #F44336, #D32F2F);
+    color: white;
+  }
+  
+  .draw {
+    background: linear-gradient(to right, #FFC107, #FF9800);
+    color: white;
+  }
+  
+  button {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+  }
+  
+  button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  

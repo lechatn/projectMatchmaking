@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Game.css';
 import { useWebSocket } from './WebSocket';
 
 const Game = () => {
   const WebSocket = useWebSocket();
+  const navigate = useNavigate();
 
   const location = useLocation();
   const playAgainst = location.state?.playAgainst;
@@ -14,6 +15,8 @@ const Game = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [turn] = useState(0);
   const [isMyTurn, setIsMyTurn] = useState(false);
+  const [result, setResult] = useState('null');
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     if (turn === 0) {
@@ -23,7 +26,7 @@ const Game = () => {
   }, [turn, hostId, opponentId]);
 
   const handleClick = (index) => {
-    if (!isMyTurn || board[index]) return;
+    if (!isMyTurn || board[index] || result !== 'null') return;
     const playerSymbol = hostId < opponentId ? 'X' : 'O';
     WebSocket.send(`play_move:${index}:${hostId}:${playerSymbol}`);
   };
@@ -31,11 +34,20 @@ const Game = () => {
   useEffect(() => {
     const handleMessage = (event) => {
       const data = event.data;
-      const [command, newBoard] = data.split(':');
+      const [command, newBoard, gameResult] = data.split(':');
       if (command === 'update_board') {
         const updatedBoard = newBoard.split('').map(cell => cell === 'N' ? '' : cell);
         setBoard(updatedBoard);
         setIsMyTurn(!isMyTurn);
+        setResult(gameResult);
+
+        if (gameResult === 'winX') {
+          const winnerPlayer = hostId < opponentId ? 'You' : playAgainst;
+          setWinner(winnerPlayer);
+        } else if (gameResult === 'winO') {
+          const winnerPlayer = hostId > opponentId ? 'You' : playAgainst;
+          setWinner(winnerPlayer);
+        }
       }
     };
 
@@ -43,7 +55,20 @@ const Game = () => {
     return () => {
       WebSocket.removeEventListener('message', handleMessage);
     };
-  }, [WebSocket, isMyTurn]);
+  }, [WebSocket, isMyTurn, hostId, opponentId, playAgainst]);
+
+  useEffect(() => {
+    if (result === 'winX' || result === 'winO') {
+      const isWinner = (result === 'winX' && hostId < opponentId) || (result === 'winO' && hostId > opponentId);
+      setTimeout(() => {
+        navigate(isWinner ? '/win' : '/lose', { state: { winner } });
+      }, 1000);
+    } else if (result === 'draw') {
+      setTimeout(() => {
+        navigate('/draw');
+      }, 1000);
+    }
+  }, [result, hostId, opponentId, navigate, winner]);
 
   return (
     <div className="Game">
@@ -57,7 +82,6 @@ const Game = () => {
           </div>
         ))}
       </div>
-      <p>{isMyTurn ? "It's your turn!" : "Waiting for opponent's move..."}</p>
     </div>
   );
 };
