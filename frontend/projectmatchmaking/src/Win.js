@@ -11,7 +11,8 @@ const Win = () => {
     <div className="result-page win">
       <h1>🎉 Congratulations! 🎉</h1>
       <p>{winner} won the game!</p>
-      <button onClick={() => navigate('/')}>Play Again</button>
+      <button onClick={() => navigate('/loading')}>Play Again</button>
+      <button onClick={() => navigate('/')}>Go Home</button>
     </div>
   );
 };

@@ -9,7 +9,8 @@ const Draw = () => {
     <div className="result-page draw">
       <h1>🤝 It's a Draw!</h1>
       <p>No winners this time!</p>
-      <button onClick={() => navigate('/')}>Play Again</button>
+      <button onClick={() => navigate('/loading')}>Play Again</button>
+      <button onClick={() => navigate('/')}>Go Home</button>
     </div>
   );
 };

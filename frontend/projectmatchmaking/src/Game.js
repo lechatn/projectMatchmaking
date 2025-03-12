@@ -58,6 +58,7 @@ const Game = () => {
   }, [WebSocket, isMyTurn, hostId, opponentId, playAgainst]);
 
   useEffect(() => {
+    WebSocket.send('end_game');
     if (result === 'winX' || result === 'winO') {
       const isWinner = (result === 'winX' && hostId < opponentId) || (result === 'winO' && hostId > opponentId);
       setTimeout(() => {
@@ -82,6 +83,7 @@ const Game = () => {
           </div>
         ))}
       </div>
+      <p>{isMyTurn ? "It's your turn!" : "Waiting for opponent's move..."}</p>
     </div>
   );
 };

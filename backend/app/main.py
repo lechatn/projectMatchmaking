@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from .database import database
 from fastapi import WebSocket, WebSocketDisconnect
-from typing import List
 from .websocket import manager
 
 
@@ -51,9 +50,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 move = move_data[1]
                 playerid = move_data[2]
                 playerSymbol = move_data[3]
-                await manager.play_move(websocket, move, playerid, playerSymbol)             
+                await manager.play_move(websocket, move, playerid, playerSymbol)          
             elif data == "end_game":
-                await manager.send_message(f"Le match est terminé.")                
+                await manager.end_game()           
             else:
                 await manager.send_message(f"Message reçu: {data}")
             
