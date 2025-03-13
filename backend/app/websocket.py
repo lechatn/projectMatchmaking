@@ -184,6 +184,9 @@ class ConnectionManager:
                     await player.send_text(f"update_board:{new_board}:{result['result']}")
 
     async def checkWin(self, board, game_id):
+        print("checking win")
+        print(game_id)
+        print(board)
         if not database.is_connected:
             await database.connect()
         win_conditions = [
@@ -193,7 +196,7 @@ class ConnectionManager:
         ]
         for condition in win_conditions:
             if board[condition[0]] == board[condition[1]] == board[condition[2]] == 'X':
-                query = "UPDATE game SET result = :result WHERE id = :game_id"
+                query = "UPDATE game SET result = :result , is_finished = TRUE WHERE id = :game_id"
                 values = {
                     "result": "winX",
                     "game_id": game_id
@@ -217,8 +220,9 @@ class ConnectionManager:
                 await database.execute(query=query3, values={"playerid": players["player1id"]})
                 await database.execute(query=query3, values={"playerid": players["player2id"]})
 
+
             elif board[condition[0]] == board[condition[1]] == board[condition[2]] == 'O':
-                query = "UPDATE game SET result = :result WHERE id = :game_id"
+                query = "UPDATE game SET result = :result , is_finished = TRUE WHERE id = :game_id"
                 values = {
                     "result": "winO",
                     "game_id": game_id
@@ -243,7 +247,8 @@ class ConnectionManager:
                 await database.execute(query=query3, values={"playerid": players["player2id"]})
 
         if 'N' not in board:
-            query = "UPDATE game SET result = :result WHERE id = :game_id"
+            print("Game ended in a draw.")
+            query = "UPDATE game SET result = :result , is_finished = TRUE WHERE id = :game_id"
             values = {
                 "result": "draw",
                 "game_id": game_id
@@ -270,8 +275,12 @@ class ConnectionManager:
             values4 = {
                 "playerid": players["player2id"]
             }
-            await database.execute(query=query3, values=values3)
-            await database.execute(query=query3, values=values4)
+            try:
+                print("Game ended in a draw.")
+                await database.execute(query=query3, values=values3)
+                await database.execute(query=query3, values=values4)
+            except Exception as e:
+                print(e)
 
     async def checkGame(self):
         if not database.is_connected:
@@ -320,8 +329,5 @@ class ConnectionManager:
                 print(e)
         else:
             print("Pas assez de joueurs.")
-
-    async def end_game(self):
-        await self.checkGame()
 
 manager = ConnectionManager()
