@@ -92,7 +92,7 @@ npm install
 2. **Lancer le serveur de développement**:
 
 ```bash
-npm run dev
+npm start
 ```
 
 ### 5️⃣ Tester la communication WebSocket

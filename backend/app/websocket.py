@@ -129,7 +129,7 @@ class ConnectionManager:
             if not database.is_connected:
                 await database.connect()
 
-            query = "SELECT * FROM game WHERE player1id = :playerid OR player2id = :playerid"
+            query = "SELECT * FROM game WHERE (player1id = :playerid OR player2id = :playerid) AND is_finished = FALSE"
             values = {
                 "playerid": playerid
             }
