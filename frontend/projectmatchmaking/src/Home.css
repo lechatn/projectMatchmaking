@@ -130,7 +130,6 @@ button:active {
   box-shadow: 0 2px 10px rgba(52, 152, 219, 0.2);
 }
 
-/* Animation de secousse pour validation */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20%, 60% { transform: translateX(-5px); }
@@ -142,7 +141,6 @@ button:active {
   border-color: #e74c3c !important;
 }
 
-/* Loader pour l'état de recherche */
 .loader {
   margin-top: 1rem;
 }
@@ -161,7 +159,6 @@ button:active {
   to { transform: rotate(360deg); }
 }
 
-/* Style du bouton en état de recherche */
 button.connecting {
   background-color: #2c3e50;
   cursor: wait;
@@ -172,7 +169,6 @@ button.connecting:hover {
   background-color: #2c3e50;
 }
 
-/* Arrière-plan animé */
 .animated-bg {
   position: fixed;
   top: 0;
@@ -207,7 +203,6 @@ button.connecting:hover {
   }
 }
 
-/* Background animation */
 .App::before {
   content: '';
   position: absolute;
@@ -222,7 +217,6 @@ button.connecting:hover {
   z-index: -1;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .App-header {
     width: 90%;
