@@ -8,6 +8,7 @@ const Draw = () => {
   const WebSocket = useWebSocket();
 
   const handlePlayAgain = () => {
+    WebSocket.send('replay');
     WebSocket.send('check_game');
     navigate('/loading');
   };

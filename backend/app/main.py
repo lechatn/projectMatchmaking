@@ -52,7 +52,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 playerSymbol = move_data[3]
                 await manager.play_move(websocket, move, playerid, playerSymbol)          
             elif data == "check_game":
-                await manager.checkGame()         
+                await manager.checkGame() 
+            elif data == "replay":
+                await manager.replay(websocket)        
             else:
                 await manager.send_message(f"Message reçu: {data}")
             

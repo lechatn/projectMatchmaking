@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from fastapi import WebSocket
 from .database import database
 import time
@@ -7,6 +7,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.queue: List[WebSocket] = []
+        self.websocket_to_playerid: Dict[WebSocket, int] = {}
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -14,6 +15,11 @@ class ConnectionManager:
 
     async def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
+        if websocket in self.queue:
+            self.queue.remove(websocket)
+        if websocket in self.websocket_to_playerid:
+            del self.websocket_to_playerid[websocket]
+            
 
     async def get_pseudo(self, player1id: int, player2id: int):
         if not database.is_connected:
@@ -82,12 +88,13 @@ class ConnectionManager:
                     "port": websocket.client.port
                 }
                 try:
-                    id = await database.execute(query=queryId, values=valuesId)
+                    player = await database.fetch_one(query=queryId, values=valuesId)
+                    playerId = player["id"]
+                    self.websocket_to_playerid[websocket] = playerId
                 except Exception as e:
                     print(e)
-                await websocket.send_text("connection_established:" + str(id))
+                await websocket.send_text("connection_established:" + str(playerId))
                 time.sleep(5)
-                print("Checking game")
                 await self.checkGame()
             except Exception as e:
                 await websocket.send_text("connection_failed")
@@ -184,9 +191,6 @@ class ConnectionManager:
                     await player.send_text(f"update_board:{new_board}:{result['result']}")
 
     async def checkWin(self, board, game_id):
-        print("checking win")
-        print(game_id)
-        print(board)
         if not database.is_connected:
             await database.connect()
         win_conditions = [
@@ -216,11 +220,6 @@ class ConnectionManager:
                 except Exception as e:
                     print(e)
 
-                query3 = "UPDATE queue SET isingame = FALSE WHERE id = :playerid"
-                await database.execute(query=query3, values={"playerid": players["player1id"]})
-                await database.execute(query=query3, values={"playerid": players["player2id"]})
-
-
             elif board[condition[0]] == board[condition[1]] == board[condition[2]] == 'O':
                 query = "UPDATE game SET result = :result , is_finished = TRUE WHERE id = :game_id"
                 values = {
@@ -242,12 +241,7 @@ class ConnectionManager:
                 except Exception as e:
                     print(e)
 
-                query3 = "UPDATE queue SET isingame = FALSE WHERE id = :playerid"
-                await database.execute(query=query3, values={"playerid": players["player1id"]})
-                await database.execute(query=query3, values={"playerid": players["player2id"]})
-
         if 'N' not in board:
-            print("Game ended in a draw.")
             query = "UPDATE game SET result = :result , is_finished = TRUE WHERE id = :game_id"
             values = {
                 "result": "draw",
@@ -268,19 +262,6 @@ class ConnectionManager:
             except Exception as e:
                 print(e)
 
-            query3 = "UPDATE queue SET isingame = FALSE WHERE id = :playerid"
-            values3 = {
-                "playerid": players["player1id"]
-            }
-            values4 = {
-                "playerid": players["player2id"]
-            }
-            try:
-                print("Game ended in a draw.")
-                await database.execute(query=query3, values=values3)
-                await database.execute(query=query3, values=values4)
-            except Exception as e:
-                print(e)
 
     async def checkGame(self):
         if not database.is_connected:
@@ -296,7 +277,6 @@ class ConnectionManager:
             players = await database.fetch_all(query=query)
         except Exception as e:
             print(e)
-        print(len(players))
         while len(players) >= 2:
             query = "INSERT INTO game (player1id, player2id, board, result) VALUES (:player1id, :player2id, :board, :result)"
             values = {
@@ -329,5 +309,27 @@ class ConnectionManager:
                 print(e)
         else:
             print("Pas assez de joueurs.")
+
+    async def replay(self, websocket: WebSocket):
+        print("Replay")
+        if not database.is_connected:
+            await database.connect()
+
+        playerId = self.websocket_to_playerid.get(websocket)
+        if playerId is None:
+            print("Player ID not found for the given websocket.")
+            return
+
+        print(playerId, "veut rejouer")
+        query = "UPDATE queue SET isingame = FALSE WHERE id = :playerid"
+        values = {
+            "playerid": playerId
+        }
+
+        try:
+            await database.execute(query=query, values=values)
+        except Exception as e:
+            print(e)
+
 
 manager = ConnectionManager()

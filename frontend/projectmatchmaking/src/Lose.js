@@ -1,18 +1,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Result.css';
+import { useWebSocket } from './WebSocket';
 
-const Lose = () => {
+const Draw = () => {
   const navigate = useNavigate();
+  const WebSocket = useWebSocket();
+
+  const handlePlayAgain = () => {
+    WebSocket.send('replay');
+    WebSocket.send('check_game');
+    navigate('/loading');
+  };
 
   return (
-    <div className="result-page lose">
-      <h1>😢 You Lost!</h1>
-      <p>Better luck next time!</p>
-      <button onClick={() => navigate('/loading')}>Try Again</button>
+    <div className="result-page draw">
+      <h1>🤝 It's a Draw!</h1>
+      <p>No winners this time!</p>
+      <button onClick={handlePlayAgain}>Play Again</button>
       <button onClick={() => navigate('/')}>Go Home</button>
     </div>
   );
 };
 
-export default Lose;
+export default Draw;
