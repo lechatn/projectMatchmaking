@@ -62,11 +62,11 @@ const Game = () => {
       const isWinner = (result === 'winX' && hostId < opponentId) || (result === 'winO' && hostId > opponentId);
       setTimeout(() => {
         navigate(isWinner ? '/win' : '/lose', { state: { winner } });
-      }, 1000);
+      }, 500);
     } else if (result === 'draw') {
       setTimeout(() => {
         navigate('/draw');
-      }, 1000);
+      }, 500);
     }
   }, [result, hostId, opponentId, navigate, winner]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Result.css';
 import { useWebSocket } from './WebSocket';
@@ -18,7 +18,6 @@ const Draw = () => {
       <h1>🤝 It's a Draw!</h1>
       <p>No winners this time!</p>
       <button onClick={handlePlayAgain}>Play Again</button>
-      <button onClick={() => navigate('/')}>Go Home</button>
     </div>
   );
 };

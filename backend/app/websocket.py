@@ -19,7 +19,7 @@ class ConnectionManager:
             self.queue.remove(websocket)
         if websocket in self.websocket_to_playerid:
             del self.websocket_to_playerid[websocket]
-            
+
 
     async def get_pseudo(self, player1id: int, player2id: int):
         if not database.is_connected:
@@ -94,7 +94,6 @@ class ConnectionManager:
                 except Exception as e:
                     print(e)
                 await websocket.send_text("connection_established:" + str(playerId))
-                time.sleep(5)
                 await self.checkGame()
             except Exception as e:
                 await websocket.send_text("connection_failed")

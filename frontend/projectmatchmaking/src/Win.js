@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Result.css';
 import { useWebSocket } from './WebSocket';
@@ -18,7 +18,6 @@ const Win = () => {
       <h1>🎉 You Won!</h1>
       <p>Congratulations!</p>
       <button onClick={handlePlayAgain}>Play Again</button>
-      <button onClick={() => navigate('/')}>Go Home</button>
     </div>
   );
 };
