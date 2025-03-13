@@ -1,45 +1,60 @@
-# 🕹️ **Serveur de Matchmaking**
+🕹️ Serveur de Matchmaking
 
-## 📜 Présentation du projet
+📜 Présentation du projet
 
-Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au tour par tour. Il comprend trois composantes principales :  
-- 🖥️ **Serveur de matchmaking**  
-- 🎮 **Logiciel client**  
-- 🗃️ **Base de données**
+Ce projet consiste en un serveur de matchmaking pour un jeu de plateau au tour par tour. Il comprend trois composantes principales :
 
-## ⚙️ Fonctionnalités
+🖥️ Serveur de matchmaking
 
-- **File d'attente** pour gérer les joueurs en attente
-- **Matchs** avec communication entre les joueurs et gestion du plateau de jeu
-- **Tours** pour enregistrer les coups joués
+🎮 Logiciel client
 
-## 🛠️ **Stack technologique**
+🗃️ Base de données
 
-### 1️⃣ **Base de données**  
-- 🗃️ **PostgreSQL** : Base de données relationnelle
+⚙️ Fonctionnalités
 
-### 2️⃣ **Serveur de matchmaking**  
-- 🐍 **Python** avec **FastAPI** pour l'API  
-- 💬 **WebSockets** pour la communication en temps réel  
-- 🛠️ **SQLAlchemy** pour l'interaction avec PostgreSQL
+File d'attente pour gérer les joueurs en attente
 
-### 3️⃣ **Logiciel client**  
-- ⚛️ **React.js** avec **Next.js** pour l'interface web  
+Matchs avec communication entre les joueurs et gestion du plateau de jeu
 
-### 4️⃣ **Communication temps réel**  
-- 💬 **WebSockets** pour les échanges en temps réel  
-- 📡 **gRPC** pour des communications structurées (optionnel)
+Tours pour enregistrer les coups joués
 
-## 🚨 **Prérequis**
+🛠️ Stack technologique
 
-- Python 3.x  
-- PostgreSQL  
-- Node.js (si React est utilisé)  
+1️⃣ Base de données
 
----
-source venv/Scripts/activate
-uvicorn app.main:app --reload dans backend
+🗃️ PostgreSQL : Base de données relationnelle
 
-wscat -c ws://127.0.0.1:8000/ws
+2️⃣ Serveur de matchmaking
 
-deactivate sortir du venv
+🐍 Python avec FastAPI pour l'API
+
+💬 WebSockets pour la communication en temps réel
+
+🛠️ SQLAlchemy pour l'interaction avec PostgreSQL
+
+3️⃣ Logiciel client
+
+⚛️ React.js avec Next.js pour l'interface web
+
+4️⃣ Communication temps réel
+
+💬 WebSockets pour les échanges en temps réel
+
+📡 gRPC pour des communications structurées (optionnel)
+
+🚨 Prérequis
+
+Python 3.x
+
+PostgreSQL
+
+Node.js (si React est utilisé)
+
+🚀 Mise en place du projet
+
+1️⃣ Cloner le dépôt
+```bash
+git clone https://github.com/votre-utilisateur/votre-repo.git
+cd votre-repo
+```
+
