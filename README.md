@@ -58,6 +58,8 @@ CREATE DATABASE nom_base;
 
 3. **Configurer les variables d'environnement**: Créez un fichier `.env` à la racine du projet et ajoutez les informations de connexion à la base de données.
 
+PS : Si la création de la bdd ne marche pas, le fichier backupMatchmaking.sql peut vous aider à la créer (ressources/backupMatchmaking.sql)
+
 ### 3️⃣ Configurer le serveur de matchmaking
 
 1. **Créer et activer un environnement virtuel**:
