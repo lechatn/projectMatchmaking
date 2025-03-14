@@ -2,8 +2,14 @@ from databases import Database
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Boolean, Text, Enum, ForeignKey, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import ENUM
+from dotenv import load_dotenv
+import os
 
-DATABASE_URL = "postgresql+asyncpg://postgres:Ynovnoe2025@localhost/matchmaking_db"
+# Charger les variables d'environnement à partir du fichier .env
+load_dotenv()
+
+# Obtenir l'URL de la base de données à partir des variables d'environnement
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Création d'une instance Database
 database = Database(DATABASE_URL)
@@ -26,6 +32,7 @@ class Queue(Base):
     port = Column(Integer, nullable=False)
     pseudo = Column(String(50), nullable=False)
     entrance_date = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
+    isingame = Column(Boolean, default=False)
 
 class Game(Base):
     __tablename__ = 'game'
@@ -34,7 +41,7 @@ class Game(Base):
     player2id = Column(Integer, ForeignKey('queue.id', ondelete='CASCADE'), nullable=False)
     board = Column(Text, nullable=False)
     is_finished = Column(Boolean, default=False)
-    result = Column(game_result_enum, default='draw')
+    result = Column(Text)
 
 class Round(Base):
     __tablename__ = 'round'

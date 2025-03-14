@@ -22,11 +22,6 @@ async def lifespan(app: FastAPI):
 # Créer l'application FastAPI en utilisant lifespan
 app = FastAPI(lifespan=lifespan)
 
-# Endpoint pour tester la connexion
-@app.get("/test-connection/")
-async def test_connection():
-    return {"message": "Base de données connectée"}
-
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
