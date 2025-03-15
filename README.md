@@ -40,8 +40,8 @@ Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au to
 ### 1️⃣ Cloner le dépôt
 
 ```bash
-git clone https://github.com/votre-utilisateur/votre-repo.git
-cd votre-repo
+git clone https://github.com/lechatn/projectMatchmaking.git
+cd projectMatchmaking
 ```
 
 
@@ -72,6 +72,7 @@ source venv/Scripts/activate
 2. **Installer les dépendances**:
 
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
@@ -87,7 +88,9 @@ uvicorn app.main:app --reload
 
 1. **Installer les dépendances**:
 
+Dans un autre terminal :
 ```bash
+cd frontend/projectmatchmaking/
 npm install
 ```
 
@@ -99,7 +102,7 @@ npm start
 
 ### 5️⃣ Tester la communication WebSocket
 
-Utilisez `wscat` pour tester la connexion WebSocket:
+Utilisez `wscat` si vous voulez tester la connexion WebSocket:
 
 ```bash
 wscat -c ws://127.0.0.1:8000/ws
