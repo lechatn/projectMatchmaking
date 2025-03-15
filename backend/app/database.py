@@ -28,7 +28,7 @@ game_result_enum = ENUM('draw', 'player1_win', 'player2_win', name='game_result'
 class Queue(Base):
     __tablename__ = 'queue'
     id = Column(Integer, primary_key=True)
-    playerip = Column(String(50), unique=True, nullable=False)
+    playerip = Column(String(50), nullable=False)
     port = Column(Integer, nullable=False)
     pseudo = Column(String(50), nullable=False)
     entrance_date = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
@@ -40,7 +40,7 @@ class Game(Base):
     player1id = Column(Integer, ForeignKey('queue.id', ondelete='CASCADE'), nullable=False)
     player2id = Column(Integer, ForeignKey('queue.id', ondelete='CASCADE'), nullable=False)
     board = Column(Text, nullable=False)
-    is_finished = Column(Boolean, default=False)
+    is_finished = Column(Boolean, default=False, nullable=False)
     result = Column(Text)
 
 class Round(Base):

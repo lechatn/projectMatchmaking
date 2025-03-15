@@ -1,28 +1,39 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from contextlib import asynccontextmanager
-from .database import database
-from fastapi import WebSocket, WebSocketDisconnect
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.future import select
+from .database import database, create_all_tables, Base
 from .websocket import manager
+from sqlalchemy.exc import OperationalError
+import asyncio
+import os
 
+# Créez un moteur asynchrone
+DATABASE_URL = os.getenv('DATABASE_URL')
+async_engine = create_async_engine(DATABASE_URL, echo=True)
 
-# Création d'un gestionnaire de contexte async
+# Gestionnaire de contexte async pour FastAPI
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Démarrage de l'application
+    # Connexion à la base de données
     await database.connect()
     print("Connexion à la base de données réussie !")
     
-    # Permet à l'application de fonctionner
-    yield
+    # Création des tables au démarrage en mode asynchrone
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    print("Tables créées !")
     
-    # Arrêt de l'application
+    yield  # Permet à l'application de fonctionner
+    
+    # Déconnexion de la base de données
     await database.disconnect()
     print("Déconnexion de la base de données.")
 
-# Créer l'application FastAPI en utilisant lifespan
+# Initialisation de FastAPI avec lifespan
 app = FastAPI(lifespan=lifespan)
 
-
+# WebSocket Endpoint
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

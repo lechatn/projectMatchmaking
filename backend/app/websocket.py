@@ -135,6 +135,7 @@ class ConnectionManager:
     async def play_move(self, websocket: WebSocket, move: str, playerid: str, playerSymbol: str):
         if websocket in self.queue:
             playerid = int(playerid)
+            print(playerid)
             
             query = "SELECT * FROM game WHERE (player1id = :playerid OR player2id = :playerid) AND is_finished = FALSE"
             values = {"playerid": playerid}
@@ -197,6 +198,7 @@ class ConnectionManager:
                     "game_id": game_id
                 }
                 await update(query=query, values=values)
+                return
                 
             elif board[condition[0]] == board[condition[1]] == board[condition[2]] == 'O':
                 query = "UPDATE game SET result = :result, is_finished = TRUE WHERE id = :game_id"
@@ -205,6 +207,7 @@ class ConnectionManager:
                     "game_id": game_id
                 }
                 await update(query=query, values=values)
+                return
 
         if 'N' not in board:
             query = "UPDATE game SET result = :result, is_finished = TRUE WHERE id = :game_id"
@@ -224,9 +227,9 @@ class ConnectionManager:
         players = await select(query=query, fetch_all=True)
         if not players:
             return
-            
+        print(len(players))
         while len(players) >= 2:
-            query = "INSERT INTO game (player1id, player2id, board, result) VALUES (:player1id, :player2id, :board, :result)"
+            query = "INSERT INTO game (player1id, player2id, board, result, is_finished) VALUES (:player1id, :player2id, :board, :result, FALSE)"
             values = {
                 "player1id": players[0]["id"],
                 "player2id": players[1]["id"],
