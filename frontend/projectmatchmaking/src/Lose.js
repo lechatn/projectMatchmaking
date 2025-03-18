@@ -13,11 +13,17 @@ const Lose = () => {
     navigate('/loading');
   };
 
+  const handleGoHome = () => {
+    WebSocket.send('leave_queue');
+    navigate('/');
+  }
+
   return (
     <div className="result-page lose">
       <h1>😢 You Lost!</h1>
       <p>Better luck next time!</p>
       <button onClick={handlePlayAgain}>Play Again</button>
+      <button onClick={handleGoHome}>Home</button>
     </div>
   );
 };
