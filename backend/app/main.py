@@ -8,7 +8,6 @@ from sqlalchemy.exc import OperationalError
 import asyncio
 import os
 
-# Créez un moteur asynchrone
 DATABASE_URL = os.getenv('DATABASE_URL')
 async_engine = create_async_engine(DATABASE_URL, echo=True)
 
@@ -24,7 +23,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# WebSocket Endpoint
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
