@@ -1,7 +1,7 @@
 # 🕹️ Serveur de Matchmaking
 ## 📜 Présentation du projet
 
-Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au tour par tour. Il comprend trois composantes principales :  
+Ce projet consiste en un serveur de **matchmaking** pour un jeu de morpion. Il comprend trois composantes principales :  
 - 🖥️ **Serveur de matchmaking**  
 - 🎮 **Logiciel client**  
 - 🗃️ **Base de données**
@@ -10,7 +10,6 @@ Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au to
 
 - **File d'attente** pour gérer les joueurs en attente
 - **Matchs** avec communication entre les joueurs et gestion du plateau de jeu
-- **Tours** pour enregistrer les coups joués
 
 ## 🛠️ Stack technologique
 
@@ -27,13 +26,12 @@ Ce projet consiste en un serveur de **matchmaking** pour un jeu de plateau au to
 
 ### 4️⃣ Communication temps réel  
 - 💬 **WebSockets** pour les échanges en temps réel  
-- 📡 **gRPC** pour des communications structurées (optionnel)
 
 ## 🚨 Prérequis
 
 - Python 3.x  
 - PostgreSQL  
-- Node.js (si React est utilisé)  
+- Node.js
 
 ## 🚀 Mise en place du projet
 
