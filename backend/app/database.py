@@ -5,26 +5,19 @@ from sqlalchemy.dialects.postgresql import ENUM
 from dotenv import load_dotenv
 import os
 
-# Charger les variables d'environnement à partir du fichier .env
 load_dotenv()
 
-# Obtenir l'URL de la base de données à partir des variables d'environnement
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Création d'une instance Database
 database = Database(DATABASE_URL)
 
-# SQLAlchemy pour la gestion des modèles
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 
-# Créer le moteur de connexion
 engine = create_engine(DATABASE_URL)
 
-# Définition du type ENUM pour les résultats du jeu
 game_result_enum = ENUM('draw', 'player1_win', 'player2_win', name='game_result', create_type=False)
 
-# Définition des tables
 class Queue(Base):
     __tablename__ = 'queue'
     id = Column(Integer, primary_key=True)
@@ -50,6 +43,5 @@ class Round(Base):
     move = Column(String(50), nullable=False)
     player_turn = Column(Integer, ForeignKey('queue.id', ondelete='CASCADE'), nullable=False)
 
-# Créer toutes les tables
 def create_all_tables():
     Base.metadata.create_all(engine)

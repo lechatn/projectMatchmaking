@@ -5,21 +5,16 @@ from fastapi import WebSocket, WebSocketDisconnect
 from .websocket import manager
 
 
-# Création d'un gestionnaire de contexte async
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Démarrage de l'application
     await database.connect()
     print("Connexion à la base de données réussie !")
     
-    # Permet à l'application de fonctionner
     yield
     
-    # Arrêt de l'application
     await database.disconnect()
     print("Déconnexion de la base de données.")
 
-# Créer l'application FastAPI en utilisant lifespan
 app = FastAPI(lifespan=lifespan)
 
 
