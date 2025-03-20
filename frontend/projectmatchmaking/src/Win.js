@@ -13,11 +13,17 @@
       navigate('/loading');
     };
 
+    const handleGoHome = () => {
+      WebSocket.send('leave_queue');
+      navigate('/');
+    };
+
     return (
       <div className="result-page win">
         <h1>🎉 You Won!</h1>
         <p>Congratulations!</p>
         <button onClick={handlePlayAgain}>Play Again</button>
+        <button onClick={handleGoHome}>Home</button>
       </div>
     );
   };

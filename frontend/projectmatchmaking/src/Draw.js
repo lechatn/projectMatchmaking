@@ -13,11 +13,17 @@ const Draw = () => {
     navigate('/loading');
   };
 
+  const handleGoHome = () => {
+    WebSocket.send('leave_queue');
+    navigate('/');
+  }
+
   return (
     <div className="result-page draw">
       <h1>🤝 It's a Draw!</h1>
       <p>No winners this time!</p>
       <button onClick={handlePlayAgain}>Play Again</button>
+      <button onClick={() => navigate('/')}>Home</button>
     </div>
   );
 };

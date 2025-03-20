@@ -12,25 +12,16 @@ import os
 DATABASE_URL = os.getenv('DATABASE_URL')
 async_engine = create_async_engine(DATABASE_URL, echo=True)
 
-# Gestionnaire de contexte async pour FastAPI
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Connexion à la base de données
     await database.connect()
     print("Connexion à la base de données réussie !")
     
-    # Création des tables au démarrage en mode asynchrone
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("Tables créées !")
+    yield
     
-    yield  # Permet à l'application de fonctionner
-    
-    # Déconnexion de la base de données
     await database.disconnect()
     print("Déconnexion de la base de données.")
 
-# Initialisation de FastAPI avec lifespan
 app = FastAPI(lifespan=lifespan)
 
 # WebSocket Endpoint
